@@ -1,6 +1,6 @@
 require './supervisor'
-$demand = 5
-$delay = 1
+$demand = 50
+$delay = 0.1
 $barbers = 3
 $total_customers = 50
 $chairs = 5
