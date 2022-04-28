@@ -1,9 +1,9 @@
 require './supervisor'
 $demand = 5
 $delay = 1
-$barbers = 15
+$barbers = 5
 $total_customers = 50
-$chairs = 5
+$chairs = 10
 
 def add_call(identifier)
   @supervisor.queue(Proc.new do
@@ -13,7 +13,7 @@ def add_call(identifier)
   end)
 end
 
-@supervisor = Supervisor.new($barbers, overflow: $chairs)
+@supervisor = Supervisor.new($barbers, max_queue_length: $chairs)
 @num = Semaphore.new
 while @num.peek + 1 < $total_customers do
   sleep(rand(0.0..3.0) / $demand)

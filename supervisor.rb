@@ -4,9 +4,10 @@ require './worker'
 
 class Supervisor
   # @param number_of_workers determine the number of worker threads that will get jobs from this supervisor
-  def initialize(number_of_workers, overflow: 5)
+  def initialize(number_of_workers, max_queue_length: 5, overflow_handler: Proc.new { print("queue overflow: ") })
+    @overflow_handler = overflow_handler
     @queue_length = Semaphore.new
-    @overflow = overflow
+    @max_queue_length = max_queue_length
     @pool = Vector.new
     @subscription_identifier = Semaphore.new
     @next_task_identifier = Semaphore.new
@@ -17,7 +18,7 @@ class Supervisor
 
   # @param job Proc to be executed by worker threads
   def queue(job)
-    return print("queue overflow: ") if @queue_length.peek + 1 > @overflow
+    return @overflow_handler.call(job) if @queue_length.peek + 1 > @max_queue_length
     @queue_length.signal
 
     @jobs[@next_task_identifier.signal] = job
