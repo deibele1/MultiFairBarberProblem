@@ -33,8 +33,8 @@ class Supervisor
         @pool.add(Thread.current)
         sleep
       end
-      @jobs.delete(subscription_identifier)&.call
       @queue_length.release
+      @jobs.delete(subscription_identifier)&.call
     end
   end
 
