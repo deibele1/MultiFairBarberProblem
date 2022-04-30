@@ -1,4 +1,5 @@
 require './vector'
+require './counter'
 require './semaphore'
 require './worker'
 
@@ -9,8 +10,8 @@ class Supervisor
     @queue_length = Semaphore.new
     @max_queue_length = max_queue_length
     @pool = Vector.new
-    @subscription_identifier = Semaphore.new
-    @next_task_identifier = Semaphore.new
+    @subscription_identifier = Counter.new
+    @next_task_identifier = Counter.new
     @jobs = Hash.new
     @workers = []
     number_of_workers.times { add_worker }
